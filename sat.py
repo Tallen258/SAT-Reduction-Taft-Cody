@@ -40,7 +40,7 @@ def sat(func: list):
     
     gates = []
     for gate in func:
-        or_gate = LpVariable(gate, 0, 1)
+        or_gate = LpVariable(gate.replace(';', ',').replace('-', 'not'), 0, 1)
         gates.append(or_gate)
         current_inputs = gate.split(';')
         current_variables = []
@@ -74,5 +74,6 @@ def sat(func: list):
 
 
 f = ['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a']
+# f = ['a;b', '-a;b', 'a;-b']
 
 print(sat(f))
