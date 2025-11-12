@@ -1,4 +1,4 @@
-from pulp import LpVariable, LpProblem, LpMaximize, LpBinary
+from pulp import LpVariable, LpProblem, LpMaximize, value
 
 def verify_sat(func: list, solution: dict):
     for or_gate in func:
@@ -24,13 +24,17 @@ def sat(func: list):
             inputs.add(c[-1])
 
     nodeToVariable = {
-        node: LpVariable(node, 0, 1)
+        node: LpVariable(node, 0, 1, cat='Binary')
         for node in inputs
     }
     notNodeToVariable = {
-        node: LpVariable("not" + node, 0, 1)
+        node: LpVariable("not" + node, 0, 1, cat='Binary')
         for node in inputs
     }
+    for i in inputs:
+        problem += nodeToVariable[i] + notNodeToVariable[i] == 1
+
+
     def is_not_gate(input):
         return len(input) == 2
     
@@ -56,14 +60,15 @@ def sat(func: list):
         problem += f_variable <= gate
     problem += f_variable >= sum(gates) - 1
 
-    problem.solve()
-    # See if the problem found a solution
-    # If true, return that as a dictionary type
-    # If not, return none
+    problem += f_variable
 
-    # (the code below does not work)
-    for i in inputs:
-        print(nodeToVariable[i].value)
+    problem.solve()
+
+    return {
+        i: value(nodeToVariable[i])
+        for i in inputs
+    }
+
 
 
 
