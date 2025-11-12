@@ -57,9 +57,13 @@ def sat(func: list):
     problem += f_variable >= sum(gates) - 1
 
     problem.solve()
-    
-    # return nodeToVariable[target].value, {input: nodeToVariable[(str(input))].value for input in inputs}
+    # See if the problem found a solution
+    # If true, return that as a dictionary type
+    # If not, return none
 
+    # (the code below does not work)
+    for i in inputs:
+        print(nodeToVariable[i].value)
 
 
 
