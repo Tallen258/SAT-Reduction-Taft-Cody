@@ -30,3 +30,12 @@ def test_sat_1():
 def test_sat_2():
     f = ['a;b', 'a;-b', '-a;b']
     assert verify_sat(f, sat(f)) == True
+
+def test_sat_3():
+    f = ['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a']
+    assert verify_sat(f, sat(f)) == True
+
+def test_sat_4():
+    f = ['a;b', '-a;b', 'a;-b', '-a;-b']
+    assert verify_sat(f, sat(f)) == False
+

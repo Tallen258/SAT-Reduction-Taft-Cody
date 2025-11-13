@@ -1,6 +1,9 @@
 from pulp import LpVariable, LpProblem, LpMaximize, value, LpBinary
 
 def verify_sat(func: list, solution: dict):
+    if solution is None: 
+        return False
+    
     for or_gate in func:
         inputs = or_gate.split(";")
         works = False
@@ -59,11 +62,13 @@ def sat(func: list):
 
     for gate in gates:
         problem += f_variable <= gate
-    problem += f_variable >= sum(gates) - 1
+    problem += f_variable >= sum(gates) - (len(gates) - 1)
 
     problem += f_variable
 
     problem.solve()
+    if value(f_variable) == 0:
+        return None
 
     return {
         i: value(nodeToVariable[i])
@@ -84,6 +89,6 @@ def sat(func: list):
 
 
 f = ['a;b;c', '-a;b;-c', '-d;-b', '-a;c', '-b;a']
-# f = ['a;b', '-a;b', 'a;-b']
+# f = ['a;b', '-a;b', 'a;-b', '-a;-b']
 
 print(sat(f))
